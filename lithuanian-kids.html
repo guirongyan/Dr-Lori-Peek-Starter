@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithuanian for Kids 🇱🇹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fff9eb; --bg2:#ffe9c5;
+    --ink:#2a1a0c; --dim:#7a6253;
+    --primary:#ff7a3a; --primary-d:#e85f1f;
+    --accent:#4dabf7; --accent-d:#1f7ed1;
+    --green:#3fbf6f; --green-d:#2a9954;
+    --yellow:#ffd166; --pink:#ff6b9d; --purple:#9b6df0;
+    --lt1:#fdb927; --lt2:#006a44; --lt3:#c1272d; /* Lithuanian flag accent */
+    --card:#ffffff; --line:rgba(42,26,12,.14);
+    --shadow:0 6px 0 rgba(42,26,12,.12), 0 14px 30px rgba(232,95,31,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Outfit',sans-serif;color:var(--ink);min-height:100vh;line-height:1.5;
+    background:
+      radial-gradient(900px 500px at 90% -10%, rgba(253,185,39,.4), transparent 60%),
+      radial-gradient(700px 500px at -5% 30%, rgba(0,106,68,.12), transparent 55%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+    background-attachment:fixed;padding-bottom:60px;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:700;line-height:1.15}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+  header{padding:22px 0 6px;text-align:center}
+  header h1{font-size:clamp(2rem,5vw,2.9rem)}
+  header h1 .flag{display:inline-block;font-size:.85em;vertical-align:1px;margin-left:6px}
+  header h1 .a{color:var(--primary)}
+  header p{color:var(--dim);margin-top:4px;font-size:1rem}
+
+  /* Sound badge + diagnostic */
+  .sound-badge{display:inline-block;margin-top:12px;padding:8px 18px;border-radius:30px;cursor:pointer;
+    background:#fff;border:2px solid var(--ink);color:var(--ink);font-weight:600;font-size:.92rem;
+    box-shadow:0 3px 0 var(--ink);transition:.15s}
+  .sound-badge:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--ink)}
+  .sound-badge.ok{background:var(--green);color:#fff;border-color:var(--green-d);box-shadow:0 3px 0 var(--green-d)}
+  .sound-badge.warn{background:#ffdcb5;border-color:#c2622a;color:#7a3b0a;box-shadow:0 3px 0 #c2622a}
+  .voice-diag{max-width:600px;margin:12px auto 0;background:#fff;border:2px solid var(--ink);border-radius:14px;
+    padding:12px 14px;box-shadow:0 3px 0 var(--ink);text-align:left}
+  .voice-diag.hide{display:none}
+  .voice-info{font-size:.85rem;color:var(--dim);margin-bottom:8px;text-align:center}
+  .voice-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .voice-row label{font-weight:600;font-size:.88rem}
+  .voice-row select{flex:1;min-width:200px;padding:7px 10px;border:2px solid var(--ink);border-radius:10px;font-family:'Outfit';font-size:.85rem;background:#fff}
+
+  /* Tabs */
+  nav.tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 20px}
+  nav.tabs button{
+    border:2px solid var(--ink);background:#fff;color:var(--ink);font-family:'Outfit';font-weight:600;
+    padding:10px 18px;border-radius:30px;cursor:pointer;font-size:.95rem;
+    box-shadow:0 4px 0 var(--ink);transition:.15s
+  }
+  nav.tabs button:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
+  nav.tabs button.on{background:var(--primary);color:#fff;border-color:var(--primary-d);box-shadow:0 4px 0 var(--primary-d)}
+
+  /* Category chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px}
+  .chip{border:2px solid var(--ink);background:#fff;padding:7px 16px;border-radius:24px;cursor:pointer;font-weight:600;font-size:.92rem;box-shadow:0 3px 0 var(--ink);transition:.15s}
+  .chip:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--ink)}
+  .chip.on{background:var(--lt2);color:#fff;border-color:#003f29;box-shadow:0 3px 0 #003f29}
+
+  /* Pages */
+  .page{display:none;animation:fade .3s ease}
+  .page.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* Word grid */
+  .word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+  .word-card{
+    background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:20px 16px;text-align:center;
+    box-shadow:var(--shadow);cursor:pointer;transition:.2s;position:relative
+  }
+  .word-card:hover{transform:translateY(-4px)}
+  .word-card .emoji{font-size:3.8rem;line-height:1;margin-bottom:6px}
+  .word-card .lt{font-family:'Fraunces';font-size:1.9rem;font-weight:700;color:var(--lt2)}
+  .word-card .say{color:var(--accent-d);font-size:1.05rem;margin-top:2px;font-weight:600;letter-spacing:.5px}
+  .word-card .en{color:var(--ink);font-size:1.2rem;margin-top:8px;font-weight:600}
+  .word-card .speak{
+    position:absolute;top:10px;right:10px;background:var(--accent);color:#fff;border:none;width:36px;height:36px;
+    border-radius:50%;font-size:1rem;cursor:pointer;box-shadow:0 3px 0 var(--accent-d);transition:.15s
+  }
+  .word-card .speak:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--accent-d)}
+
+  /* Flashcard */
+  .flash{background:var(--card);border:3px solid var(--ink);border-radius:28px;padding:36px 24px;text-align:center;box-shadow:var(--shadow);max-width:560px;margin:0 auto}
+  .flash .emoji{font-size:7rem;line-height:1;margin-bottom:12px}
+  .flash .lt{font-family:'Fraunces';font-size:clamp(2.4rem,7vw,4rem);color:var(--lt2);font-weight:700}
+  .flash .say{font-size:1.6rem;color:var(--accent-d);font-weight:700;margin-top:8px;letter-spacing:1px}
+  .flash .en{font-size:1.8rem;margin-top:14px;color:var(--ink)}
+  .flash .progress{color:var(--dim);font-size:.95rem;margin-top:16px}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:2px solid var(--ink);
+    font-family:'Outfit';font-weight:700;font-size:1rem;padding:12px 22px;border-radius:30px;
+    transition:.15s;background:#fff;color:var(--ink);box-shadow:0 4px 0 var(--ink)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
+  .btn-primary{background:var(--primary);color:#fff;border-color:var(--primary-d);box-shadow:0 4px 0 var(--primary-d)}
+  .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent-d);box-shadow:0 4px 0 var(--accent-d)}
+  .btn-green{background:var(--green);color:#fff;border-color:var(--green-d);box-shadow:0 4px 0 var(--green-d)}
+  .btn-lg{font-size:1.1rem;padding:14px 28px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+
+  /* Practice / Quiz panels */
+  .panel{background:var(--card);border:2px solid var(--ink);border-radius:24px;padding:24px;box-shadow:var(--shadow);max-width:720px;margin:0 auto}
+  .panel h2{font-size:1.55rem;text-align:center;margin-bottom:4px}
+  .panel .sub{text-align:center;color:var(--dim);margin-bottom:16px;font-size:.95rem}
+
+  /* Matching */
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .match-tile{border:2px solid var(--ink);border-radius:14px;padding:14px 8px;background:#fff;cursor:pointer;text-align:center;font-weight:600;transition:.15s;box-shadow:0 3px 0 var(--ink);font-size:1.05rem}
+  .match-tile.lt{color:var(--lt2);font-family:'Fraunces';font-size:1.25rem}
+  .match-tile.en{color:var(--ink)}
+  .match-tile .pic{font-size:2rem;display:block;margin-bottom:2px}
+  .match-tile:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--ink)}
+  .match-tile.sel{background:var(--yellow)}
+  .match-tile.ok{background:var(--green);color:#fff;border-color:var(--green-d);pointer-events:none;box-shadow:0 3px 0 var(--green-d)}
+  .match-tile.bad{background:#ffb4a8;animation:shake .35s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* MC */
+  .mc-q{text-align:center;margin:6px 0 18px}
+  .mc-q .emoji{font-size:5rem;line-height:1;display:block}
+  .mc-q .big{font-family:'Fraunces';font-size:2.4rem;color:var(--lt2);margin-top:6px}
+  .mc-q .en-big{font-family:'Fraunces';font-size:2rem;color:var(--ink);margin-top:6px}
+  .mc-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .mc-opt{border:2px solid var(--ink);background:#fff;border-radius:14px;padding:14px 8px;font-size:1.1rem;font-weight:600;cursor:pointer;text-align:center;box-shadow:0 3px 0 var(--ink);transition:.15s}
+  .mc-opt.lt{color:var(--lt2);font-family:'Fraunces';font-size:1.25rem}
+  .mc-opt .pic{font-size:2.4rem;display:block;line-height:1;margin-bottom:2px}
+  .mc-opt:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--ink)}
+  .mc-opt.ok{background:var(--green);color:#fff;border-color:var(--green-d);box-shadow:0 3px 0 var(--green-d)}
+  .mc-opt.bad{background:#ffb4a8;border-color:#c25}
+
+  /* Score / finish */
+  .score-bar{display:flex;justify-content:space-between;align-items:center;background:var(--yellow);border:2px solid var(--ink);border-radius:14px;padding:8px 16px;margin-bottom:16px;font-weight:700;box-shadow:0 3px 0 var(--ink)}
+  .feedback{text-align:center;margin-top:14px;min-height:28px;font-weight:600;font-size:1.05rem}
+  .feedback.good{color:var(--green-d)} .feedback.bad{color:#c25}
+  .finish{text-align:center;padding:30px 12px}
+  .finish .big{font-family:'Fraunces';font-size:2.8rem;color:var(--primary-d)}
+  .finish .stars{font-size:3rem;margin:10px 0}
+  .finish p{color:var(--dim);font-size:1.05rem;margin-bottom:18px}
+
+  .mode-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+  .mode-pick button{border:2px solid var(--ink);background:#fff;color:var(--ink);font-family:'Outfit';font-weight:700;padding:18px 14px;border-radius:18px;cursor:pointer;font-size:1rem;box-shadow:0 4px 0 var(--ink);transition:.15s;text-align:center}
+  .mode-pick button:hover{transform:translateY(-3px);box-shadow:0 7px 0 var(--ink)}
+  .mode-pick button .ico{font-size:2rem;display:block;margin-bottom:6px}
+  .mode-pick button .lbl{font-size:.92rem;color:var(--dim);font-weight:500;display:block;margin-top:4px}
+
+  @media(max-width:560px){.mc-opts,.match-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Lithuanian for <span class="a">Kids</span><span class="flag">🇱🇹</span></h1>
+    <p>Read · Listen · Practice · Quiz · for our youngest learners</p>
+    <div id="soundBadge" class="sound-badge" onclick="tapEnableSound()">🔊 Tap here to start the sound</div>
+    <div id="voiceDiag" class="voice-diag hide">
+      <div id="voiceInfo" class="voice-info">Loading voices…</div>
+      <div class="voice-row">
+        <label for="ltSelect">Lithuanian voice:</label>
+        <select id="ltSelect" onchange="setLTVoice(this.value)"></select>
+      </div>
+      <div class="voice-row" style="margin-top:6px">
+        <label for="enSelect">English voice:</label>
+        <select id="enSelect" onchange="setENVoice(this.value)"></select>
+        <button class="btn" style="padding:7px 14px;font-size:.85rem" onclick="testBoth()">🔊 Test</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs">
+    <button class="on" data-tab="read" onclick="go('read')">📖 Read</button>
+    <button data-tab="flash" onclick="go('flash')">🎴 Flashcards</button>
+    <button data-tab="practice" onclick="go('practice')">🎯 Practice</button>
+    <button data-tab="quiz" onclick="go('quiz')">🏆 Quiz</button>
+  </nav>
+
+  <div class="chips" id="chips"></div>
+
+  <!-- READ -->
+  <div class="page on" id="read">
+    <div class="word-grid" id="wordGrid"></div>
+    <p style="text-align:center;color:var(--dim);margin-top:22px;font-size:.95rem">Tap any card to hear it: Lithuanian first, then English.</p>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="page" id="flash">
+    <div class="flash" id="flashCard"></div>
+    <div class="row">
+      <button class="btn" onclick="flashPrev()">⬅ Previous</button>
+      <button class="btn btn-primary btn-lg" onclick="flashSpeak()">🔊 Say it!</button>
+      <button class="btn" onclick="flashNext()">Next ➡</button>
+    </div>
+    <div class="row"><button class="btn btn-accent" onclick="flashShuffle()">🔀 Shuffle</button></div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class="page" id="practice">
+    <div class="panel">
+      <h2>🎯 Match the Pictures</h2>
+      <p class="sub">Tap a Lithuanian word, then tap the matching picture.</p>
+      <div class="score-bar"><span>Matched: <span id="pMatched">0</span> / <span id="pTotal">0</span></span><span id="pStars"></span></div>
+      <div class="match-grid" id="matchGrid"></div>
+      <div class="feedback" id="pFeedback"></div>
+      <div class="row"><button class="btn btn-primary" onclick="practiceStart()">🔄 New Round</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="page" id="quiz">
+    <div class="panel" id="quizMain"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   WORD LIST — Lithuanian for 5-year-old American kids
+   say: friendly American-style pronunciation guide
+   ===================================================== */
+var WORDS=[
+  // GREETINGS
+  {cat:'Greetings', lt:'labas',     say:'LAH-bahs',         en:'hello',        emoji:'👋'},
+  {cat:'Greetings', lt:'iki',       say:'EE-kee',           en:'bye',          emoji:'👋'},
+  {cat:'Greetings', lt:'ačiū',      say:'AH-choo',          en:'thank you',    emoji:'🙏'},
+  {cat:'Greetings', lt:'prašom',    say:'PRAH-shohm',       en:'please',       emoji:'🥺'},
+  {cat:'Greetings', lt:'taip',      say:'TIPE (rhymes with “type”)', en:'yes', emoji:'✅'},
+  {cat:'Greetings', lt:'ne',        say:'NEH',              en:'no',           emoji:'❌'},
+
+  // FAMILY
+  {cat:'Family', lt:'mama',     say:'MAH-mah',         en:'mom',          emoji:'👩'},
+  {cat:'Family', lt:'tėtis',    say:'TEH-tees',        en:'dad',          emoji:'👨'},
+  {cat:'Family', lt:'sesuo',    say:'seh-SWAW',        en:'sister',       emoji:'👧'},
+  {cat:'Family', lt:'brolis',   say:'BROH-lees',       en:'brother',      emoji:'👦'},
+  {cat:'Family', lt:'močiutė',  say:'moh-CHOO-teh',    en:'grandma',      emoji:'👵'},
+  {cat:'Family', lt:'senelis',  say:'seh-NEH-lees',    en:'grandpa',      emoji:'👴'},
+
+  // COLORS
+  {cat:'Colors', lt:'raudona',   say:'row-DOH-nah',     en:'red',          emoji:'🟥'},
+  {cat:'Colors', lt:'mėlyna',    say:'MEH-lee-nah',     en:'blue',         emoji:'🟦'},
+  {cat:'Colors', lt:'geltona',   say:'gel-TOH-nah',     en:'yellow',       emoji:'🟨'},
+  {cat:'Colors', lt:'žalia',     say:'ZHAH-lee-ah',     en:'green',        emoji:'🟩'},
+  {cat:'Colors', lt:'balta',     say:'BAHL-tah',        en:'white',        emoji:'⬜'},
+  {cat:'Colors', lt:'juoda',     say:'YWOH-dah',        en:'black',        emoji:'⬛'},
+
+  // NUMBERS
+  {cat:'Numbers', lt:'vienas',  say:'VYEH-nahs',       en:'one',          emoji:'1️⃣'},
+  {cat:'Numbers', lt:'du',      say:'DOO',             en:'two',          emoji:'2️⃣'},
+  {cat:'Numbers', lt:'trys',    say:'TREES',           en:'three',        emoji:'3️⃣'},
+  {cat:'Numbers', lt:'keturi',  say:'keh-too-REE',     en:'four',         emoji:'4️⃣'},
+  {cat:'Numbers', lt:'penki',   say:'pen-KEE',         en:'five',         emoji:'5️⃣'},
+  {cat:'Numbers', lt:'šeši',    say:'sheh-SHEE',       en:'six',          emoji:'6️⃣'},
+  {cat:'Numbers', lt:'septyni', say:'sep-tee-NEE',     en:'seven',        emoji:'7️⃣'},
+  {cat:'Numbers', lt:'aštuoni', say:'ahsh-TWOH-nee',   en:'eight',        emoji:'8️⃣'},
+  {cat:'Numbers', lt:'devyni',  say:'deh-vee-NEE',     en:'nine',         emoji:'9️⃣'},
+  {cat:'Numbers', lt:'dešimt',  say:'DEH-sheemt',      en:'ten',          emoji:'🔟'},
+
+  // ANIMALS
+  {cat:'Animals', lt:'šuo',     say:'SHWOH',           en:'dog',          emoji:'🐶'},
+  {cat:'Animals', lt:'katė',    say:'KAH-teh',         en:'cat',          emoji:'🐱'},
+  {cat:'Animals', lt:'paukštis',say:'POWK-shtees',     en:'bird',         emoji:'🐦'},
+  {cat:'Animals', lt:'žuvis',   say:'zhoo-VEES',       en:'fish',         emoji:'🐟'},
+  {cat:'Animals', lt:'arklys',  say:'ahrk-LEES',       en:'horse',        emoji:'🐴'},
+  {cat:'Animals', lt:'karvė',   say:'KAR-veh',         en:'cow',          emoji:'🐄'},
+  {cat:'Animals', lt:'kiškis',  say:'KEESH-kees',      en:'rabbit',       emoji:'🐰'},
+  {cat:'Animals', lt:'meška',   say:'MESH-kah',        en:'bear',         emoji:'🐻'}
+];
+var CATEGORIES=['All','Greetings','Family','Colors','Numbers','Animals'];
+var activeCat='All';
+function currentWords(){ return activeCat==='All' ? WORDS : WORDS.filter(w=>w.cat===activeCat); }
+
+/* =====================================================
+   SPEECH — picks a Lithuanian voice if available,
+   plus an American English voice. Robust to all the
+   common browser quirks.
+   ===================================================== */
+var synth=window.speechSynthesis, vlist=[], soundReady=false, ltVoice=null, enVoice=null;
+
+function loadV(){
+  if(!synth) return;
+  vlist=synth.getVoices()||[];
+  if(vlist.length){
+    if(!ltVoice) ltVoice = pickLithuanian();
+    if(!enVoice) enVoice = pickAmericanEnglish();
+    populateVoiceMenus();
+    updateSoundBadge();
+  }
+}
+if(synth){
+  loadV();
+  synth.onvoiceschanged=loadV;
+  var pollN=0; var poll=setInterval(function(){ loadV(); if(vlist.length||++pollN>30) clearInterval(poll); },200);
+}
+
+function pickLithuanian(){
+  // 1) lt-LT (or lt) locale
+  var v = vlist.find(x=>/^lt([_-]|$)/i.test(x.lang));
+  if(v) return v;
+  // 2) name contains Lithuanian
+  v = vlist.find(x=>/lithuani/i.test(x.name));
+  if(v) return v;
+  return null;
+}
+function pickAmericanEnglish(){
+  var ranked=[
+    /Microsoft (Aria|Jenny|Guy|Davis|Tony|Nancy|Amber|Ana|Ashley|Brandon|Christopher|Cora|Elizabeth|Eric|Jacob|Michelle|Monica|Roger|Sara|Steffan).*Online \(Natural\) - English \(United States\)/i,
+    /Microsoft (David|Mark|Zira) - English \(United States\)/i,
+    /Google US English/i,
+    /Samantha/i, /Ava/i, /Allison/i, /Susan/i, /Alex/i
+  ];
+  for(var i=0;i<ranked.length;i++){
+    var v=vlist.find(x=>ranked[i].test(x.name)); if(v)return v;
+  }
+  var us=vlist.find(v=>/^en[_-]US$/i.test(v.lang)) || vlist.find(v=>/^en/i.test(v.lang));
+  return us || null;
+}
+
+// Speak a single utterance with a chosen voice and lang.
+function speakOne(text, voice, lang, rate, onend){
+  if(!synth){ if(onend)onend(); return; }
+  if(synth.paused) try{synth.resume();}catch(e){}
+  var u=new SpeechSynthesisUtterance(text);
+  if(voice){ u.voice=voice; u.lang=voice.lang||lang; } else { u.lang=lang; }
+  u.rate=rate||0.9; u.pitch=1.05; u.volume=1;
+  u.onstart=function(){ soundReady=true; updateSoundBadge(); keepAlive(); };
+  u.onend=function(){ stopKeepAlive(); if(onend)onend(); };
+  u.onerror=function(){ stopKeepAlive(); if(onend)onend(); };
+  synth.speak(u);
+}
+
+// Say Lithuanian word, then English meaning.
+function sayWord(w){
+  if(!synth){ flashError('Speech not supported here. Try Chrome or Edge.'); return; }
+  try{ synth.cancel(); }catch(e){}
+  if(!vlist.length){ loadV(); setTimeout(function(){ sayWord(w); },400); return; }
+  // 1) Lithuanian (or pronunciation fallback if no LT voice)
+  var ltText = ltVoice ? w.lt : friendlySay(w.say);
+  speakOne(ltText, ltVoice, 'lt-LT', 0.85, function(){
+    // 2) Then English meaning
+    setTimeout(function(){ speakOne(w.en, enVoice, 'en-US', 0.95); }, 250);
+  });
+}
+function sayLT(w){ /* Lithuanian only */
+  if(!vlist.length){ loadV(); setTimeout(function(){sayLT(w);},400); return; }
+  try{synth.cancel();}catch(e){}
+  var t = ltVoice ? w.lt : friendlySay(w.say);
+  speakOne(t, ltVoice, 'lt-LT', 0.85);
+}
+function sayEN(text){
+  if(!vlist.length){ loadV(); setTimeout(function(){sayEN(text);},400); return; }
+  try{synth.cancel();}catch(e){}
+  speakOne(text, enVoice, 'en-US', 0.95);
+}
+// Convert the friendly say-string ("LAH-bahs") into English-readable phonemes
+// when no Lithuanian voice is available.
+function friendlySay(s){ return s.toLowerCase().replace(/[^a-z\s-]/g,'').replace(/-/g,' '); }
+
+// Chrome keep-alive: prevents the engine from quietly pausing mid-speech.
+var keepAliveId=null;
+function keepAlive(){ stopKeepAlive(); keepAliveId=setInterval(function(){ try{ if(synth.speaking){synth.pause();synth.resume();} }catch(e){} },10000); }
+function stopKeepAlive(){ if(keepAliveId){ clearInterval(keepAliveId); keepAliveId=null; } }
+
+function flashError(msg){
+  var b=document.getElementById('soundBadge');
+  if(b){ b.textContent='⚠ '+msg; b.classList.add('warn'); }
+  console.warn('[speech]',msg);
+}
+function updateSoundBadge(){
+  var b=document.getElementById('soundBadge'); if(!b) return;
+  if(!synth){ b.textContent='⚠ Speech not supported in this browser'; b.classList.add('warn'); return; }
+  if(!vlist.length){ b.textContent='⏳ Loading voices…'; return; }
+  if(!soundReady){ b.textContent='🔊 Tap here to start the sound'; b.classList.remove('warn','ok'); return; }
+  var ltOK = !!ltVoice;
+  if(ltOK){
+    b.textContent='🔊 Sound on — Lithuanian + American English';
+    b.classList.remove('warn'); b.classList.add('ok');
+  } else {
+    b.textContent='🔊 Sound on — no Lithuanian voice found, using friendly pronunciation';
+    b.classList.remove('warn','ok');
+  }
+}
+function tapEnableSound(){
+  if(synth) try{synth.resume();}catch(e){}
+  // Speak a tiny English word to unlock audio on iOS/Safari and reveal diagnostics
+  sayEN('Ready');
+  document.getElementById('voiceDiag').classList.remove('hide');
+  setTimeout(updateSoundBadge,500);
+}
+
+function populateVoiceMenus(){
+  var ltSel=document.getElementById('ltSelect');
+  var enSel=document.getElementById('enSelect');
+  if(!ltSel||!enSel) return;
+  ltSel.innerHTML=''; enSel.innerHTML='';
+  // LT menu: Lithuanian first, then "none" fallback
+  var noLT=document.createElement('option'); noLT.value=''; noLT.textContent='(none — use friendly pronunciation)'; ltSel.appendChild(noLT);
+  vlist.filter(v=>/^lt/i.test(v.lang)||/lithuani/i.test(v.name)).forEach(function(v){
+    var o=document.createElement('option'); o.value=v.name; o.textContent=v.name+' ('+v.lang+')';
+    if(ltVoice && ltVoice.name===v.name) o.selected=true;
+    ltSel.appendChild(o);
+  });
+  // EN menu: American English first
+  vlist.filter(v=>/^en/i.test(v.lang)).forEach(function(v){
+    var us=/en[_-]US|United States|US English/i.test(v.lang+' '+v.name);
+    var o=document.createElement('option'); o.value=v.name; o.textContent=(us?'⭐ ':'')+v.name+' ('+v.lang+')';
+    if(enVoice && enVoice.name===v.name) o.selected=true;
+    enSel.appendChild(o);
+  });
+  // Info line
+  var info=document.getElementById('voiceInfo');
+  var ltCount=vlist.filter(v=>/^lt/i.test(v.lang)||/lithuani/i.test(v.name)).length;
+  var usCount=vlist.filter(v=>/en[_-]US/i.test(v.lang)||/United States|US English/i.test(v.name)).length;
+  info.innerHTML=vlist.length+' voices total · '+ltCount+' Lithuanian · '+usCount+' American English'
+   + (ltCount===0?'<br><span style="color:#c25">No Lithuanian voice on this device — the app will use a friendly American-style pronunciation. To add a real Lithuanian voice, install one in your operating system\'s speech settings.</span>':'');
+}
+function setLTVoice(name){ ltVoice = name ? vlist.find(v=>v.name===name) : null; updateSoundBadge(); }
+function setENVoice(name){ enVoice = vlist.find(v=>v.name===name) || enVoice; }
+function testBoth(){
+  var sample = WORDS.find(w=>w.lt==='labas') || WORDS[0];
+  sayWord(sample);
+}
+
+/* =====================================================
+   TABS + CATEGORY CHIPS
+   ===================================================== */
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===id));
+  if(id==='read') renderRead();
+  if(id==='flash'){ flashIdx=0; flashOrder=currentWords().map((_,i)=>i); flashRender(); }
+  if(id==='practice') practiceStart();
+  if(id==='quiz') quizReset();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderChips(){
+  var c=document.getElementById('chips'); c.innerHTML='';
+  CATEGORIES.forEach(function(name){
+    var b=document.createElement('button'); b.className='chip'+(name===activeCat?' on':'');
+    b.textContent=name;
+    b.onclick=function(){ activeCat=name; renderChips(); refreshActive(); };
+    c.appendChild(b);
+  });
+}
+function refreshActive(){
+  // Re-render whichever page is on
+  if(document.getElementById('read').classList.contains('on')) renderRead();
+  if(document.getElementById('flash').classList.contains('on')){ flashIdx=0; flashOrder=currentWords().map((_,i)=>i); flashRender(); }
+  if(document.getElementById('practice').classList.contains('on')) practiceStart();
+  if(document.getElementById('quiz').classList.contains('on')) quizReset();
+}
+renderChips();
+
+/* =====================================================
+   READ PAGE
+   ===================================================== */
+function renderRead(){
+  var g=document.getElementById('wordGrid'); g.innerHTML='';
+  currentWords().forEach(function(it){
+    var d=document.createElement('div'); d.className='word-card';
+    d.onclick=function(){ sayWord(it); };
+    d.innerHTML='<button class="speak" onclick="event.stopPropagation();sayWord(WORDS.find(w=>w.lt===\''+it.lt+'\'))" title="Hear it">🔊</button>'
+      +'<div class="emoji">'+it.emoji+'</div>'
+      +'<div class="lt">'+it.lt+'</div>'
+      +'<div class="say">'+it.say+'</div>'
+      +'<div class="en">'+it.en+'</div>';
+    g.appendChild(d);
+  });
+}
+renderRead();
+
+/* =====================================================
+   FLASHCARDS
+   ===================================================== */
+var flashOrder=WORDS.map((_,i)=>i), flashIdx=0;
+function flashRender(){
+  var pool=currentWords();
+  if(!flashOrder.length) flashOrder=pool.map((_,i)=>i);
+  var w=pool[flashOrder[flashIdx]%pool.length];
+  if(!w) return;
+  document.getElementById('flashCard').innerHTML=
+    '<div class="emoji">'+w.emoji+'</div>'
+    +'<div class="lt">'+w.lt+'</div>'
+    +'<div class="say">'+w.say+'</div>'
+    +'<div class="en">'+w.en+'</div>'
+    +'<div class="progress">'+(flashIdx+1)+' / '+pool.length+'</div>';
+  sayWord(w);
+}
+function flashNext(){ var n=currentWords().length; flashIdx=(flashIdx+1)%n; flashRender(); }
+function flashPrev(){ var n=currentWords().length; flashIdx=(flashIdx-1+n)%n; flashRender(); }
+function flashSpeak(){ var w=currentWords()[flashOrder[flashIdx]%currentWords().length]; sayWord(w); }
+function flashShuffle(){ flashOrder=shuffle(currentWords().map((_,i)=>i)); flashIdx=0; flashRender(); }
+
+/* =====================================================
+   PRACTICE — Match the Lithuanian word to the picture
+   ===================================================== */
+var pState={matched:0,sel:null,count:5};
+function practiceStart(){
+  var pool=shuffle(currentWords().slice()).slice(0,Math.min(pState.count, currentWords().length));
+  pState.matched=0; pState.sel=null;
+  document.getElementById('pTotal').textContent=pool.length;
+  document.getElementById('pMatched').textContent=0;
+  document.getElementById('pStars').textContent='';
+  document.getElementById('pFeedback').textContent='';
+  var lt = pool.map(p=>({type:'lt',w:p}));
+  var pic = pool.map(p=>({type:'pic',w:p}));
+  var tiles=shuffle(lt.concat(pic));
+  var g=document.getElementById('matchGrid'); g.innerHTML='';
+  tiles.forEach(function(t){
+    var d=document.createElement('div'); d.className='match-tile '+(t.type==='lt'?'lt':'en');
+    d.dataset.word=t.w.lt; d.dataset.type=t.type;
+    d.innerHTML = t.type==='lt' ? t.w.lt : ('<span class="pic">'+t.w.emoji+'</span>'+t.w.en);
+    d.onclick=function(){ practicePick(d); };
+    g.appendChild(d);
+  });
+}
+function practicePick(el){
+  if(el.classList.contains('ok')) return;
+  if(!pState.sel){ pState.sel=el; el.classList.add('sel');
+    if(el.dataset.type==='lt') sayLT(WORDS.find(w=>w.lt===el.dataset.word));
+    return;
+  }
+  if(pState.sel===el){ el.classList.remove('sel'); pState.sel=null; return; }
+  var a=pState.sel, b=el;
+  if(a.dataset.word===b.dataset.word && a.dataset.type!==b.dataset.type){
+    a.classList.remove('sel'); a.classList.add('ok'); b.classList.add('ok');
+    pState.matched++; document.getElementById('pMatched').textContent=pState.matched;
+    document.getElementById('pStars').textContent='⭐'.repeat(pState.matched);
+    var w=WORDS.find(x=>x.lt===a.dataset.word);
+    document.getElementById('pFeedback').className='feedback good';
+    document.getElementById('pFeedback').textContent='✨ '+w.lt+' = '+w.en+'!';
+    sayWord(w);
+    if(pState.matched===Number(document.getElementById('pTotal').textContent)){
+      document.getElementById('pFeedback').textContent='🎉 All matched! Tap “New Round” to play again.';
+    }
+    pState.sel=null;
+  } else {
+    b.classList.add('bad');
+    document.getElementById('pFeedback').className='feedback bad';
+    document.getElementById('pFeedback').textContent='Not quite — try again!';
+    setTimeout(function(){ a.classList.remove('sel'); b.classList.remove('bad'); pState.sel=null; }, 600);
+  }
+}
+
+/* =====================================================
+   QUIZ — picture→word, word→picture, listening
+   ===================================================== */
+var Q={mode:null, items:[], idx:0, score:0};
+function quizReset(){
+  document.getElementById('quizMain').innerHTML=
+    '<h2>🏆 Choose Your Quiz</h2>'
+    +'<p class="sub">Each quiz has 8 questions.</p>'
+    +'<div class="mode-pick">'
+    +'<button onclick="quizStart(\'pic2lt\')"><span class="ico">🖼️</span>Picture → Lithuanian<span class="lbl">See picture, pick word</span></button>'
+    +'<button onclick="quizStart(\'lt2pic\')"><span class="ico">🔤</span>Lithuanian → Picture<span class="lbl">See word, pick picture</span></button>'
+    +'<button onclick="quizStart(\'en2lt\')"><span class="ico">🇺🇸</span>English → Lithuanian<span class="lbl">See English, pick word</span></button>'
+    +'<button onclick="quizStart(\'listen\')"><span class="ico">🎧</span>Listening<span class="lbl">Hear it, pick picture</span></button>'
+    +'</div>';
+}
+function quizStart(mode){
+  Q.mode=mode; Q.idx=0; Q.score=0;
+  var base=shuffle(currentWords().slice());
+  Q.items = base.concat(shuffle(currentWords().slice())).slice(0,8);
+  quizRender();
+}
+function quizRender(){
+  if(Q.idx>=Q.items.length){ quizFinish(); return; }
+  var w=Q.items[Q.idx], box=document.getElementById('quizMain');
+  var head='<div class="score-bar"><span>Question <b>'+(Q.idx+1)+'</b> of '+Q.items.length+'</span><span>⭐ '+Q.score+'</span></div>';
+  box.innerHTML = head + mcHTML(w, Q.mode);
+  if(Q.mode==='listen') setTimeout(function(){ sayLT(w); }, 350);
+}
+function mcHTML(w, mode){
+  var pool=currentWords().filter(x=>x.lt!==w.lt);
+  var wrongs=shuffle(pool).slice(0,3);
+  var all=shuffle([w].concat(wrongs));
+  var qH='', optsH='';
+
+  if(mode==='pic2lt'){
+    qH='<div class="mc-q"><span class="emoji">'+w.emoji+'</span><div class="en-big">'+w.en+'</div></div>';
+    optsH=all.map(function(o){ return '<button class="mc-opt lt" data-val="'+o.lt+'" onclick="quizPick(this,\''+esc(w.lt)+'\',\''+esc(w.lt)+'\')">'+o.lt+'</button>'; }).join('');
+  } else if(mode==='lt2pic'){
+    qH='<div class="mc-q"><div class="big">'+w.lt+'</div><div class="say" style="color:#1f7ed1;font-weight:700">'+w.say+'</div></div>';
+    optsH=all.map(function(o){ return '<button class="mc-opt" data-val="'+o.lt+'" onclick="quizPick(this,\''+esc(w.lt)+'\',\''+esc(w.lt)+'\')"><span class="pic">'+o.emoji+'</span>'+o.en+'</button>'; }).join('');
+  } else if(mode==='en2lt'){
+    qH='<div class="mc-q"><div class="en-big">'+w.en+'</div></div>';
+    optsH=all.map(function(o){ return '<button class="mc-opt lt" data-val="'+o.lt+'" onclick="quizPick(this,\''+esc(w.lt)+'\',\''+esc(w.lt)+'\')">'+o.lt+'</button>'; }).join('');
+  } else if(mode==='listen'){
+    qH='<div class="mc-q"><button class="btn btn-accent btn-lg" onclick="sayLT(WORDS.find(w=>w.lt===\''+w.lt+'\'))">🔊 Listen again</button></div>';
+    optsH=all.map(function(o){ return '<button class="mc-opt" data-val="'+o.lt+'" onclick="quizPick(this,\''+esc(w.lt)+'\',\''+esc(w.lt)+'\')"><span class="pic">'+o.emoji+'</span>'+o.en+'</button>'; }).join('');
+  }
+  return qH + '<div class="mc-opts">'+optsH+'</div><div class="feedback" id="qfb"></div>';
+}
+function quizPick(el, correct, ltAnswer){
+  document.querySelectorAll('.mc-opt').forEach(b=>b.style.pointerEvents='none');
+  var w=WORDS.find(x=>x.lt===ltAnswer);
+  if(el.dataset.val===correct){
+    el.classList.add('ok'); Q.score++;
+    document.getElementById('qfb').className='feedback good';
+    document.getElementById('qfb').textContent='✨ Correct!';
+    sayWord(w);
+  } else {
+    el.classList.add('bad');
+    document.querySelectorAll('.mc-opt').forEach(b=>{ if(b.dataset.val===correct) b.classList.add('ok'); });
+    document.getElementById('qfb').className='feedback bad';
+    document.getElementById('qfb').textContent='The answer was '+w.lt+' ('+w.en+')';
+    sayWord(w);
+  }
+  setTimeout(function(){ Q.idx++; quizRender(); }, 1700);
+}
+function quizFinish(){
+  var s=Q.score, total=Q.items.length;
+  var stars = s>=8?'⭐⭐⭐⭐⭐':s>=6?'⭐⭐⭐⭐':s>=4?'⭐⭐⭐':s>=2?'⭐⭐':'⭐';
+  var msg = s>=7?'Šaunu! (That means awesome in Lithuanian!)':s>=5?'Great job! Keep practicing.':s>=3?'Good start — try again!':'Let’s read the words again together.';
+  document.getElementById('quizMain').innerHTML=
+    '<div class="finish"><div class="big">You scored '+s+' / '+total+'</div>'
+    +'<div class="stars">'+stars+'</div><p>'+msg+'</p>'
+    +'<div class="row"><button class="btn btn-primary btn-lg" onclick="quizStart(\''+Q.mode+'\')">🔄 Play Again</button>'
+    +'<button class="btn" onclick="quizReset()">↩ Other Quiz</button></div></div>';
+}
+
+/* utils */
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function esc(s){ return (s||'').replace(/'/g,"\\'"); }
+</script>
+</body>
+</html>
